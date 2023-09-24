@@ -2,7 +2,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import openpyxl
-import pymongo
 from .models import Projects
 
 # database = pymongo.MongoClient("mongodb+srv://sgyaswal1:Y1fs6XlNygTrt6Yy@cluster0.iwy1azb.mongodb.net/?retryWrites=true&w=majority")["assignment"]
