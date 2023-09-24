@@ -3,10 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 import openpyxl
 import pymongo
+from .models import Projects
 
-database = pymongo.MongoClient("mongodb+srv://sgyaswal1:Y1fs6XlNygTrt6Yy@cluster0.iwy1azb.mongodb.net/?retryWrites=true&w=majority")["assignment"]
+# database = pymongo.MongoClient("mongodb+srv://sgyaswal1:Y1fs6XlNygTrt6Yy@cluster0.iwy1azb.mongodb.net/?retryWrites=true&w=majority")["assignment"]
 
-Projects = database['projects']
+# Projects = database['projects']
 
 class ExcelDataView(APIView):
     def post(self, request):
@@ -39,7 +40,9 @@ class ExcelDataView(APIView):
             return Response({'message': 'No valid data found in the Excel file'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            Projects.insert_many(data_to_insert)
+            # Projects.insert_many(data_to_insert)
+            Projects.objects.bulk_create([Projects(**data) for data in data_to_insert])
+
             return Response({'message': "Data saved successfully"}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'message': 'Error saving data', 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -47,9 +50,17 @@ class ExcelDataView(APIView):
 class GetProjects(APIView):
     def get(self, request):
         try:
-            data = list(Projects.aggregate([{'$project':{"_id":0}}]))
+            data = Projects.objects.values(
+                'title',
+                'technologies',
+                'skillset_frontend',
+                'skillset_backend',
+                'skillset_databases',
+                'skillset_infrastructure'
+            )
+
             if data:
-                return Response({'data': data}, status=status.HTTP_200_OK)
+                return Response({'data': list(data)}, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'Data not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
@@ -58,11 +69,11 @@ class GetProjects(APIView):
 class DeleteAllDataView(APIView):
     def post(self, request):
         try:
-            result = Projects.delete_many({})
+            deleted_count, _ = Projects.objects.all().delete()
             
             return Response(
                 {
-                    "message": f"Deleted {result.deleted_count} documents from the collection."
+                    "message": f"Deleted {deleted_count} documents from the collection."
                 },
                 status=status.HTTP_200_OK
             )

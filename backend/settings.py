@@ -77,6 +77,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'sql12648393',   # Replace with your database name
+        'USER': 'sql12648393',   # Replace with your database username
+        'PASSWORD': 'KeigYNIfdB',   # Replace with your database password
+        'HOST': 'sql12.freemysqlhosting.net',   # Replace with your database host (e.g., 'localhost')
+        'PORT': '3306',   # Replace with your database port (MySQL default is 3306)
+    }
+}
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
