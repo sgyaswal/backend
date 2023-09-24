@@ -55,8 +55,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    'csp.middleware.CSPMiddleware',
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+CSP_IMG_SRC = ("'self'", "img.example.com",)
+CSP_SCRIPT_SRC = ("'self'", "scripts.example.com",)
+CSP_STYLE_SRC = ("'self'", "styles.example.com",)
+
+CSP_UPGRADE_INSECURE_REQUESTS = True
 
 
 ROOT_URLCONF = 'backend.urls'
